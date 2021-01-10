@@ -53,8 +53,18 @@ sp.write('Player A: {}  Player B: {}'.format(scoreA, scoreB), align='center', fo
 
 def startGame():
 	ball.dx = 2
-	ball.dx = 2
+	ball.dy = 2
 
+def reStartGame():
+	ball.dx = 0
+	ball.dy = 0
+	scoreA = 0
+	scoreB = 0
+	paddleA.goto(-350,0)
+	paddleB.goto(350,0)	
+	ball.goto(0,0)
+	sp.clear()
+	sp.write('Player A: {}  Player B: {}'.format(scoreA, scoreB), align='center', font=('Courier', 24, 'normal'))
 
 def stop_ball():
 	if ball.dx != 0 and ball.dy != 0:
@@ -98,6 +108,7 @@ wn.onkey(paddelB_up, 'Up')
 wn.onkey(paddelB_down, 'Down')
 wn.onkey(stop_ball, 'space')
 wn.onkey(startGame, 'i')
+wn.onkey(reStartGame, 'r')
 
 
 #Main game loop
