@@ -37,8 +37,8 @@ ball.color('blue')
 ball.penup()
 ball.goto(0,0)
 
-ball.dx = 4
-ball.dy = 4
+ball.dx = 0
+ball.dy = 0
 ball.lastdx = 0
 ball.lastdy = 0
 
@@ -50,6 +50,10 @@ sp.penup()
 sp.hideturtle()
 sp.goto(0,260)
 sp.write('Player A: {}  Player B: {}'.format(scoreA, scoreB), align='center', font=('Courier', 24, 'normal'))
+
+def startGame():
+	ball.dx = 2
+	ball.dx = 2
 
 
 def stop_ball():
@@ -93,6 +97,7 @@ wn.onkey(paddelA_down, 's')
 wn.onkey(paddelB_up, 'Up')
 wn.onkey(paddelB_down, 'Down')
 wn.onkey(stop_ball, 'space')
+wn.onkey(startGame, 'i')
 
 
 #Main game loop
