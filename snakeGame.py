@@ -1,10 +1,29 @@
 import pygame
 
+side = 500
+rows = 20
+
+class Cube(object):
+	rows = 0
+	w = 0
+
+	def __init__(self, start, dirnx=1, dirny= 0, color=(255,0,0)):
+		pass
+
+	def move(self, dirnx, dirny):
+		pass
+
+	def draw(self, surface, eyes= False):
+		pass		
 
 class Snake(object):
+	body = []
+	turns = []
 
 	def __init__(self, color, position):
-		pass
+		self.color = color
+		self.head = Cube(position)
+		self.body.append(self.head)
 
 	def move(self):
 		pass
@@ -19,8 +38,8 @@ class Snake(object):
 		pass	
 
 
-def drawGrid(width, rows, surface):
-	sizeCell = width // rows
+def drawGrid(side, rows, surface):
+	sizeCell = side // rows
 	x = 0
 	y = 0
 
@@ -28,17 +47,18 @@ def drawGrid(width, rows, surface):
 		x += sizeCell
 		y += sizeCell
 
+		pygame.draw.line(surface, (255,255,255), (x,0), (x,side))
+		pygame.draw.line(surface, (255,255,255), (0,y), (side,y))
+
 def redrawWindow(surface):
 	surface.fill((0,0,0))
-	#drawGrid(width, rows, surface)
+	drawGrid(side, rows, surface)
 	pygame.display.update()
 	pass
 
 def main():
-	width = 500
-	height = 500
-	rows = 20
-	win = pygame.display.set_mode((width, height))
+	
+	win = pygame.display.set_mode((side, side))
 	#s = Snake((255,0,0), (10,10))
 
 	clock = pygame.time.Clock()
@@ -49,9 +69,6 @@ def main():
 		pygame.time.delay(50)
 		clock.tick(10)
 		redrawWindow(win)
-
-
-print('hello')
 
 
 main()
