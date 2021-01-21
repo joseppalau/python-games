@@ -1,4 +1,5 @@
 import pygame
+import random
 
 side = 500
 rows = 20
@@ -44,9 +45,9 @@ class Snake(object):
 		self.dirny = 0
 
 	def move(self):
-		for event in pygame.event.get():
+		'''for event in pygame.event.get():
 			if event.type == pygame.QUIT:
-				pygame.quit()
+				pygame.quit()'''
 
 		keys = pygame.key.get_pressed()
 			
@@ -90,7 +91,20 @@ class Snake(object):
 		pass
 
 	def addCube(self):
-		pass
+		tail = self.body[-1]
+		dx, dy = tail.dirnx, tail.dirny
+
+		if dx == 1 and dy == 0: 
+			self.body.append(Cube((tail.pos[0]-1, tail.pos[1])))
+		elif dx == -1 and dy == 0:
+			self.body.append(Cube((tail.pos[0]+1, tail.pos[1])))
+		elif dx == 0 and dy == 1:
+			self.body.append(Cube((tail.pos[0], tail.pos[1]-1)))
+		else:
+			self.body.append(Cube((tail.pos[0], tail.pos[1]+1)))
+
+		self.body[-1].dirnx = dx
+		self.body[-1].dirny = dy			
 
 	def draw(self, surface):
 		for i, c in enumerate(self.body):
@@ -112,30 +126,49 @@ def drawGrid(side, rows, surface):
 		pygame.draw.line(surface, (255,255,255), (x,0), (x,side))
 		pygame.draw.line(surface, (255,255,255), (0,y), (side,y))
 
-def redrawWindow(surface, snake):
+
+def redrawWindow(surface, snake, snack):
 	surface.fill((0,0,0))
 	drawGrid(side, rows, surface)
+	snack.draw(surface)
 	snake.draw(surface)
 	pygame.display.update()
+
+
+def randomSnake(item):
+	cubes = item.body
+
+	while True:
+		x = random.randrange(rows)
+		y = random.randrange(rows)
+
+		if len(list(filter(lambda z: z.pos == (x,y), cubes))) > 0:
+			continue
+		else:
+			break
+
+	return (x,y)			
 	
 
 def main():
 	
 	win = pygame.display.set_mode((side, side))
 	s = Snake((255,0,0), (10,10))
+	snack = Cube(randomSnake(s), color=(0,255,0))
 
 	clock = pygame.time.Clock()
 	flag = True
 	r = 0
 
 	while flag:
-		#print(s.body[0].pos)
-		'''r += 1
-		if r == 10:
-			flag = False'''
 		pygame.time.delay(50)
 		clock.tick(10)
 		s.move()
-		redrawWindow(win, s)
+
+		if s.body[0].pos == snack.pos:
+			s.addCube()
+			snack = Cube(randomSnake(s), color=(0,255,0))
+
+		redrawWindow(win, s, snack)
 
 main()
