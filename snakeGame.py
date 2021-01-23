@@ -1,5 +1,6 @@
 import pygame
 import random
+import tkinter as tk
 
 side = 500
 rows = 20
@@ -45,9 +46,9 @@ class Snake(object):
 		self.dirny = 0
 
 	def move(self):
-		'''for event in pygame.event.get():
+		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
-				pygame.quit()'''
+				pygame.quit()
 
 		keys = pygame.key.get_pressed()
 			
@@ -73,6 +74,7 @@ class Snake(object):
 
 		for i,c in enumerate(self.body):
 			p = c.pos[:]
+			
 			if p in self.turns:
 				turn = self.turns[p]
 				c.move(turn[0], turn[1])
@@ -86,9 +88,6 @@ class Snake(object):
 				elif c.dirny == -1 and c.pos[1] <= 0: c.pos = (c.pos[0], rows-1)
 				else: c.move(c.dirnx,c.dirny)		
 
-
-	def reset(self, position):
-		pass
 
 	def addCube(self):
 		tail = self.body[-1]
@@ -113,6 +112,12 @@ class Snake(object):
 			else:
 				c.draw(surface)	
 
+	def resetGame(self, position):
+		self.head = Cube(position)
+		self.body = []
+		self.body.append(self.head)
+		self.turns = {}				
+		self.dirnx, self.dirny = 1, 0
 
 def drawGrid(side, rows, surface):
 	sizeCell = side // rows
@@ -147,8 +152,18 @@ def randomSnake(item):
 		else:
 			break
 
-	return (x,y)			
-	
+	return (x,y)	
+
+
+def messageBox(subject, content):
+	root = tk.Tk()
+	root.attribute('-topmost', True)
+	root.withdraw()
+	messagebox.showinfo(subject, content)
+	try:
+		root.destroy()
+	except:
+		pass	
 
 def main():
 	
@@ -168,6 +183,13 @@ def main():
 		if s.body[0].pos == snack.pos:
 			s.addCube()
 			snack = Cube(randomSnake(s), color=(0,255,0))
+
+		for i in range(len(s.body)):
+			if s.body[i].pos in list(map(lambda x: x.pos, s.body[i+1:])):
+				content = 'You have scored %s cubes' %(len(s.body))
+				messageBox('Game Over', content)
+				resetGame((10,10))
+
 
 		redrawWindow(win, s, snack)
 
