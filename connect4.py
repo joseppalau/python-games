@@ -95,6 +95,14 @@ while not game_over:
 		if event.type == pygame.QUIT:
 			sys.exit()
 
+		if event.type == pygame.MOUSEMOTION:
+			posX = event.pos[0]
+			pygame.draw.rect(screen, BLACK,(0,0,WIDTH,SQUARESIZE))
+			if turn == 0:
+				pygame.draw.circle(screen,RED,(posX,SQUARESIZE//2),RADIUS)
+			else:
+				pygame.draw.circle(screen,YELLOW,(posX,SQUARESIZE//2),RADIUS)		
+
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			if turn == 0:
 				posX = event.pos[0]
@@ -122,6 +130,6 @@ while not game_over:
 			turn += 1
 			turn = turn % 2				
 
-			draw_board(board)
-			pygame.display.update()					
+		draw_board(board)
+		pygame.display.update()					
 	
