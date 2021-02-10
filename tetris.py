@@ -52,24 +52,73 @@ def create_grid(locked_pos = {}):
 				grid[i][j] = c
 	return grid			
 
-def draw_grid(surface):
+def draw_grid(surface, grid):
+	for i in range(len(grid)):
+		for j in range(len(grid[i])):
+			pygame.draw.rect(surface, grid[j,i], (top_lef_x + j*block_size, top_left_y + i*block_size, block_size, block_size))	
+
+	pygame.draw.rect(surface, (255,0,0), (top_lef_x, top_left_y, play_width, play_height), 4)
+	pygame.display.update()		
+
+def draw_window(surface):
 	surface.fill((0,0,0))
 	
 	pygame.font.init()
 	font = pygame.font.SysFont('comicsans', 69)
 	label = font.render('Tetris', 1, (255,255,255))
 
-	surface.blit(lable, (top_lef_x + play_width/2 - label.get_with()//2, 30)
+	surface.blit(lable, (top_lef_x + play_width//2 - label.get_with()//2, 30)
+	draw_grid(surface, grid)	
+	pygame.display.update()	
+
+def valid_space(piece, grid):
+	pass	
+
 
 def get_shape():
-	return random.choice(shapes)
+	return Piece(5, 0, random.choice(shapes))
 
 
-while True:
+def main():
+	locked_pos = {}
+	grid = create_grid(locked_pos)
 
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			sys.exit()
+	change_piece = False
+	run = True
+	current_piece = get_shape()
+	next_piece = get_shape()
+	clock = pygame.time.Clock()
+	fall_time = 0
 
+	while run:
+
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				run = False
+				sys.exit()
+
+			if event.type = pygame.KEYDOWN:
+				
+				if event.key == K_LEFT:
+					current_piece.x -= 1
+					if not valid_space(current_piece, grid):
+						current_piece.x += 1
+
+				if event.key == K_RIGHT:
+					current_piece.x += 1
+					if not valid_space(current_piece, grid):
+						current_piece.x -= 1
+
+				if event.key == K_DOWN:	
+					current_piece.y += 1
+					if not valid_space(current_piece, grid):
+						current_piece.y -= 1				
+
+				if event.key == K_UP:
+					current_piece.rotation += 1
+					if not valid_space(current_piece, grid):
+						current_piece.rotation -= 1
+
+		draw_window(surface, grid)				
 
 
