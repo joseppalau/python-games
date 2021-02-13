@@ -76,8 +76,8 @@ def valid_space(piece, grid):
 
 	for pos in formatted:
 		if pos not in accepted_pos:
-			if pos[1] > -1
-			return False
+			if pos[1] > -1:
+				return False
 
 	return True		
 
@@ -102,7 +102,7 @@ def draw_grid(surface):
 		pygame.draw.line(surface, (255,255,255), (x+block_size, y), (x+block_size, y+play_height))
 		x += block_size
 
-	for _ in range(yc-1)
+	for _ in range(yc-1):
 		pygame.draw.line(surface, (255,255,255), (x, y+block_size), (x+play_width, y+block_size))
 		y += block_size
 
@@ -116,7 +116,7 @@ def draw_window(surface, grid):
 	pygame.font.init()
 	font = pygame.font.SysFont('comicsans', 69)
 	label = font.render('Tetris', 1, (255,255,255))
-	surface.blit(lable, (top_lef_x + play_width//2 - label.get_with()//2, 30)
+	surface.blit(lable, (top_lef_x + play_width//2 - label.get_with()//2, 30))
 
 	for i in range(len(grid)):
 		for j in range(len(grid[i])):
@@ -125,8 +125,6 @@ def draw_window(surface, grid):
 	draw_grid(surface)	
 	pygame.display.update()	
 
-def valid_space(piece, grid):
-	pass	
 
 
 def get_shape():
@@ -164,7 +162,7 @@ def main(surface):
 				run = False
 				sys.exit()
 
-			if event.type = pygame.KEYDOWN:
+			if event.type == pygame.KEYDOWN:
 				
 				if event.key == K_LEFT:
 					current_piece.x -= 1
@@ -186,7 +184,29 @@ def main(surface):
 					if not valid_space(current_piece, grid):
 						current_piece.rotation -= 1
 
-		draw_window(surface, grid)		
+		shape_pos = convert_shape(current_piece)
+		
+		for i in range(len(shape_pos)):
+			x,y = shape_pos[i]
+			if y > -1:
+				grid[y][x] = current_piece.color 				
+
+		if change_piece:
+			for pos in shape_pos:
+				p = (pos[0],pos[1])
+				locked_pos[p] = current_piece.color
+
+			next_piece = get_shape()
+			current_piece = next_piece
+			change_piece = False	
+
+		draw_window(surface, grid)	
+
+		if check_lost(locked_pos):
+			run = False	
+
+	pygame.display.quit()		
+
 
 def main_menu(surface):
 	main(surface)
