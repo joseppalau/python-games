@@ -206,8 +206,21 @@ def draw_grid(surface):
 	y = top_left_y	
 
 
-def draw_next_shape(): 	
-	pass
+def draw_next_shape(surface, piece): 	
+	pygame.font.init()
+	font = pygame.font.SysFont('comicsans', 50)
+	label = font.render('Next Shape', 1, (255,255,255))
+	surface.blit(label, (sx,sy))
+
+	sx = top_lef_x + play_width + 50
+	sy = top_left_y + play_height//2 - 100
+	format = piece.shape[piece.rotation % len(piece.shape)]
+
+	for i, line in enumerate(format):
+		row = list(line)
+		for j,column in enumerate(row):
+			if column = '0':
+				pygame.draw.rect(surface, piece.color, (sx + j*block_size, sy + i*block_size, block_size, block_size),0)
 
 def draw_window(surface, grid):
 	surface.fill((0,0,0))
