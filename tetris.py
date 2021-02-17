@@ -240,6 +240,24 @@ def draw_window(surface, grid):
 	draw_grid(surface)	
 
 
+def clear_row(grid, locked):
+	for i in range(len(grid)-1, -1, -1):
+		row = grid[i]
+		if (0,0,0) not in row:
+			for k in range(i,-1,-1): #check from row i til top
+				for j in range(len(row)):
+					if k > 0:
+						if locked.get((j,k)):
+							del locked[(j,k)]					
+						if locked.get((j,k-1)):
+							locked[(j,k)] = locked[j,k-1]	
+					else:
+						if locked.get((j,k)):
+							del locked[(j,k)]					
+			
+	return locked
+
+
 def get_shape():
 	return Piece(5, 0, random.choice(shapes))
 
@@ -258,6 +276,7 @@ def main(surface):
 
 	while run:
 
+		locked = clear_row(grid, locked_pos)
 		grid = create_grid(locked_pos)
 		fall_time += clock.get_rawtime()
 		clock.tick()
