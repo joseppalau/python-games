@@ -241,20 +241,19 @@ def draw_window(surface, grid):
 
 
 def clear_row(grid, locked):
+	inc = 0
 	for i in range(len(grid)-1, -1, -1):
 		row = grid[i]
 		if (0,0,0) not in row:
-			for k in range(i,-1,-1): #check from row i til top
-				for j in range(len(row)):
-					if k > 0:
-						if locked.get((j,k)):
-							del locked[(j,k)]					
-						if locked.get((j,k-1)):
-							locked[(j,k)] = locked[j,k-1]	
-					else:
-						if locked.get((j,k)):
-							del locked[(j,k)]					
-			
+			inc += 1
+			for j in range(len(row)):
+				del locked[(j,i)]
+		elif inc > 0:
+			for j in range(len(row)):
+				if locked.get((j,i)):
+					locked[(j,i+inc)] = locked[(j,i)]
+					del locked[(j,i)]
+											
 	return locked
 
 
@@ -275,8 +274,7 @@ def main(surface):
 	fall_speed = 0.27
 
 	while run:
-
-		locked = clear_row(grid, locked_pos)
+	
 		grid = create_grid(locked_pos)
 		fall_time += clock.get_rawtime()
 		clock.tick()
@@ -327,6 +325,8 @@ def main(surface):
 			for pos in shape_pos:
 				p = (pos[0],pos[1])
 				locked_pos[p] = current_piece.color
+			locked_pos = clear_row(grid, locked_pos)
+			#grid = create_grid(locked_pos)
 
 			current_piece = next_piece
 			next_piece = get_shape()
@@ -339,6 +339,7 @@ def main(surface):
 
 		
 		if check_lost(locked_pos):
+			print(locked_pos)
 			run = False	
 
 	pygame.display.quit()		
