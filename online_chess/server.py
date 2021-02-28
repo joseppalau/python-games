@@ -2,7 +2,7 @@ import socket
 import _thread as th
 import sys
 
-server = '192.168.1.1'
+server = '192.168.1.132'
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -31,8 +31,8 @@ def threaded_client(conn):
 			break
 
 		else:
-			print('Recieved: ', reply)	
-			print('Sending: ', reply)
+			#print('Recieved: ', reply)	
+			#print('Sending: ', reply)
 			conn.sendall(str.encode(reply))	
 
 	print('Lost connection')	

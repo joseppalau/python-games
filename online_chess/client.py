@@ -1,4 +1,5 @@
 import pygame
+import sys
 
 WITH = 500
 HEIGHT = 500
@@ -35,16 +36,17 @@ def redraw_screen(screen, player):
 def main(screen):
 	run = True
 	p = Player(50,50,100,100,(0,255,0))
-	clock = pygame.time.Clock()
+	#clock = pygame.time.Clock()
 
 	while run:
-		clock.tick(60)
+		#clock.tick(60)
 		dx = 0
 		dy = 0
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				run = False
 				pygame.quit()
+				sys.exit()
 
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_LEFT:
