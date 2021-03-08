@@ -14,8 +14,11 @@ WIDTH = COL_COUNT * SQUARESIZE
 HEIGHT = (ROW_COUNT+1) * SQUARESIZE
 SIZE = (WIDTH, HEIGHT)
 RADIUS = SQUARESIZE//2 - 5
+D = SQUARESIZE//2 # the circle center will match the square center  
 cells_filled = {}
-
+tablero = pygame.Surface((SQUARESIZE * COL_COUNT, SQUARESIZE * ROW_COUNT))
+tablero.fill(BLUE)
+tablero.set_colorkey(BLACK)
 
 def create_board():
 	board = np.zeros((ROW_COUNT,COL_COUNT))
@@ -67,7 +70,19 @@ def winning_move(board, piece):
 def print_board(board):
 	print(board)	
 
-def draw_board(board):
+def draw_board(board): #the circle center matchs the square center 
+	for c in range(COL_COUNT):
+		for r in range(ROW_COUNT):
+			if board[r][c] == 1 and cells_filled.get((r,c),False):
+				pygame.draw.circle(tablero, RED, (c*SQUARESIZE+D, r*SQUARESIZE+D), RADIUS)
+			elif board[r][c] == 2 and cells_filled.get((r,c),False):
+				pygame.draw.circle(tablero, YELLOW, (c*SQUARESIZE+D, r*SQUARESIZE+D), RADIUS)				
+			else:
+				pygame.draw.circle(tablero, BLACK, (c*SQUARESIZE+D, r*SQUARESIZE+D), RADIUS)
+	screen.blit(tablero, (0, SQUARESIZE))					
+
+
+'''def draw_board(board):
 	d = SQUARESIZE//2 #the circle center matchs the square center 
 	for c in range(COL_COUNT):
 		for r in range(1,ROW_COUNT+1):
@@ -77,13 +92,13 @@ def draw_board(board):
 			elif board[r-1][c] == 2 and cells_filled.get((r-1,c),False):
 				pygame.draw.circle(screen, YELLOW, (c*SQUARESIZE+d, r*SQUARESIZE+d), RADIUS)				
 			else:
-				pygame.draw.circle(screen, BLACK, (c*SQUARESIZE+d, r*SQUARESIZE+d), RADIUS)		
+				pygame.draw.circle(screen, BLACK, (c*SQUARESIZE+d, r*SQUARESIZE+d), RADIUS)'''		
 
 def dropping_piece(sel,piece,yPos):
 	if piece == 1:
-		pygame.draw.circle(screen,RED,(sel*SQUARESIZE+RADIUS, yPos),RADIUS)
+		pygame.draw.circle(screen,RED,(sel*SQUARESIZE+D, yPos),RADIUS)
 	else:
-		pygame.draw.circle(screen,YELLOW,(sel*SQUARESIZE+RADIUS, yPos),RADIUS)
+		pygame.draw.circle(screen,YELLOW,(sel*SQUARESIZE+D, yPos),RADIUS)
 
 
 pygame.font.init()
@@ -130,10 +145,10 @@ while not game_over:
 					print_board(board)
 
 					pygame.time.delay(50)
-					while y_moving_piece < (row+1)*SQUARESIZE - RADIUS:
-						pygame.draw.rect(screen, BLACK,(0,0,WIDTH,SQUARESIZE))
-						draw_board(board)
+					while y_moving_piece < (row+1)*SQUARESIZE + RADIUS:
+						pygame.draw.rect(screen, BLACK,(0,0,SQUARESIZE * COL_COUNT, SQUARESIZE * (ROW_COUNT+1)))
 						dropping_piece(sel,1,yPos=y_moving_piece)
+						draw_board(board)
 						pygame.display.update()
 						y_moving_piece += dy	
 
@@ -158,10 +173,10 @@ while not game_over:
 					print_board(board)
 					
 					pygame.time.delay(50)
-					while y_moving_piece < (row+1)*SQUARESIZE - RADIUS:
-						pygame.draw.rect(screen, BLACK,(0,0,WIDTH,SQUARESIZE))
-						draw_board(board)
+					while y_moving_piece < (row+1)*SQUARESIZE + RADIUS:
+						pygame.draw.rect(screen, BLACK,(0,0,SQUARESIZE * COL_COUNT, SQUARESIZE * (ROW_COUNT+1)))
 						dropping_piece(sel,2,yPos=y_moving_piece)
+						draw_board(board)
 						pygame.display.update()
 						y_moving_piece += dy	
 
@@ -177,7 +192,7 @@ while not game_over:
 						pygame.time.wait(3000)
 						game_over = True
 
-			cells_filled[(row,sel)]=True			
+			#cells_filled[(row,sel)]=True			
 
 			turn += 1
 			turn = turn % 2				
